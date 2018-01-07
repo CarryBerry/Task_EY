@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Task_EY
 {
@@ -12,8 +8,8 @@ namespace Task_EY
         private object _obj = new object();
         private Monitor monitor;
 
-        public void ConsoleRecordEntry(string fileEvent, string filePath)
-        {
+        public void ConsoleRecordEntry(string fileEvent, string filePath) // writes all changes with files
+        {                                                                // to console
             lock (_obj)
             {
                 Console.WriteLine($"{DateTime.Now:dd/MM/yyyy hh:mm:ss} file {filePath} was {fileEvent}");
@@ -33,6 +29,5 @@ namespace Task_EY
             Thread.Sleep(1000);
             monitor.Dispose();
         }
-
     }
 }

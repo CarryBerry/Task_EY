@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Task_EY.EntityModel
 {
@@ -29,7 +24,6 @@ namespace Task_EY.EntityModel
         [Display(Name = "Even integer number")]
         public int IntLine { get; set; }
 
-        //[StringLength(10)]
         [Range(1, 20)]
         [Display(Name = "Float number")]
         public double DoubleLine { get; set; }

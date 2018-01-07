@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Task_EY.EntityModel
 {
@@ -17,8 +12,6 @@ namespace Task_EY.EntityModel
 
         public void DbAdd(string path, int lineCount = 100000)
         {
-            //FileInfo fileInfo = new FileInfo(Path.GetFileName(path));
-            //long length = fileInfo.Length;
             lock (_locker)
             {
                 string[] records;
@@ -33,15 +26,7 @@ namespace Task_EY.EntityModel
                         while (!sr.EndOfStream)
                         {
                             records = sr.ReadLine().Split(' ');
-                            //long size = 0;
-
-                            //Stream stream = new MemoryStream();
-
-                            //    BinaryFormatter formatter = new BinaryFormatter();
-                            //    formatter.Serialize(stream, records);
-                            //    size = stream.Length;
-
-                            //stream.Dispose();
+                           
                             i++;
 
                             Content content = new Content() // DateLine, LatinLine, CyrillicLine, IntLine, DoubleLine

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Task_EY.EntityModel;
@@ -13,14 +10,14 @@ namespace Task_EY
     public class Monitor
     {
         private ConsoleRecorder _consoleRecorder = new ConsoleRecorder();
-        private readonly int _lineCount;
+        private readonly int _lineCount; //change if amount of lines should be differ than 100.000
         private readonly FileSystemWatcher _watcher;
         private readonly DbHandler _handler;
         private Task _task;
         private readonly object _obj = new object();
-        private bool _actionStopper = true;
+        private bool _actionStopper = true; // stops monitoring when triggered
 
-        public Monitor(int lineCount = 100000)
+        public Monitor(int lineCount = 100000) // monitors certain folder and adds occured files to db
         {
             _lineCount = lineCount;
             _handler = new DbHandler();
@@ -56,7 +53,7 @@ namespace Task_EY
             _watcher.Renamed -= Watcher_Renamed;
         }
 
-        // переименование файлов
+        // triggers when file renaming
         private void Watcher_Renamed(object sender, RenamedEventArgs e)
         {
             string fileEvent = "renamed to " + e.FullPath;
@@ -65,7 +62,7 @@ namespace Task_EY
             _consoleRecorder.ConsoleRecordEntry(fileEvent, filePath);
         }
 
-        // изменение файлов
+        // triggers when file changing
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
             string fileEvent = "updated";
@@ -74,7 +71,7 @@ namespace Task_EY
             _consoleRecorder.ConsoleRecordEntry(fileEvent, filePath);
         }
 
-        // создание файлов
+        // triggers when file creating
         private void Watcher_Created(object sender, FileSystemEventArgs e)
         {
             string fileEvent = "created";
@@ -83,7 +80,7 @@ namespace Task_EY
             _consoleRecorder.ConsoleRecordEntry(fileEvent, filePath);
         }
 
-        // удаление файлов
+        // triggers when file deleting
         private void Watcher_Deleted(object sender, FileSystemEventArgs e)
         {
             string fileEvent = "deleted";
@@ -94,7 +91,7 @@ namespace Task_EY
 
         private void RecordEntry(string fileEvent, string filePath)
         {
-            lock (_obj)
+            lock (_obj) // used to maintenance one task per time
             {
                 string path = ConfigurationManager.AppSettings["LoggerPath"]; // Pass can be changed
                 using (StreamWriter writer = new StreamWriter(path, true))    // in App.config
@@ -122,13 +119,13 @@ namespace Task_EY
 
         public virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!disposed)
             {
                 if (disposing)
                 {
                     _watcher.Dispose();
                 }
-                this.disposed = true;
+                disposed = true;
             }
         }
 
