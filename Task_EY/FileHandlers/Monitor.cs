@@ -134,5 +134,43 @@ namespace Task_EY
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        public void MoveToMonitorFolder(int amount, string fileName = "file")
+        {
+            string monitorFolder = ConfigurationManager.AppSettings["DataPath"];
+
+            for (int i = 1; i <= amount; i++)
+            {
+                lock (_obj)
+                {
+                    string filePath = fileName + i.ToString() + ".txt";
+                    try
+                    {
+                        if (!File.Exists(filePath))
+                        {
+                            throw new FileNotFoundException();
+                            // This statement ensures that the file is created
+                        }
+
+                        // Ensure that the target does not exist.
+                        if (File.Exists(monitorFolder + "\\" + fileName))
+                            File.Delete(monitorFolder + "\\" + fileName);
+
+                        // Move the file.
+                        File.Move(filePath, monitorFolder);
+                        //Console.WriteLine("{0} was moved to {1}.", filePath, monitorFolder);
+                    }
+                    catch (FileNotFoundException e)
+                    {
+                        Console.WriteLine("File not exist: {0}", e.ToString());
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("The process failed: {0}", e.ToString());
+                    }
+
+                }
+            }
+        }
     }
 }

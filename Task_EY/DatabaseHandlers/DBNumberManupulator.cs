@@ -30,7 +30,7 @@ namespace Task_EY.EntityModel
             {
                 foreach (var data in context.Contents)
                 {
-                    numbers.Add(data.IntLine);
+                    numbers.Add(Convert.ToDouble(data.DoubleLine));
                 }
             }
 

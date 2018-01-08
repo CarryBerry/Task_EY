@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Configuration;
+using System.Data.Entity;
 using System.IO;
 using Task_EY.EntityModel;
 
@@ -23,7 +25,7 @@ namespace Task_EY
 
                 FileCreator creator = new FileCreator();
                 creator.CreateMany(amount);
-
+                
                 Console.WriteLine("{0} files were created", amount);
 
                 Console.WriteLine("1 - merge files,");
@@ -90,11 +92,9 @@ namespace Task_EY
                 }
                 else if (answer == 2)
                 {
-                    ConsoleRecorder recorder = new ConsoleRecorder();
+                    DbHandler handler = new DbHandler();
 
-                    recorder.OnStart();
-
-                    recorder.OnStop();
+                    handler.DbAddCreated(amount);
                 }
 
                 Console.WriteLine("Would you like to know the sum of all the first numbers in all rows?");

@@ -24,8 +24,8 @@ namespace Task_EY.EntityModel
         [Display(Name = "Even integer number")]
         public int IntLine { get; set; }
 
-        [Range(1, 20)]
+        //[Range(1, 20)]
         [Display(Name = "Float number")]
-        public double DoubleLine { get; set; }
+        public string DoubleLine { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 
@@ -29,24 +31,27 @@ namespace Task_EY.EntityModel
                            
                             i++;
 
-                            Content content = new Content() // DateLine, LatinLine, CyrillicLine, IntLine, DoubleLine
-                            {
-                                ContentId = i,
-                                DateLine = Convert.ToDateTime(records[0]),
-                                LatinLine = records[1],
-                                CyrillicLine = records[2],
-                                IntLine = Convert.ToInt32(records[3]),
-                                DoubleLine = Convert.ToDouble(records[4])
-                            };
-
-                            context.Contents.Add(content);
-                            context.SaveChanges();
-
+                            string conn = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                            SqlConnection con = new SqlConnection(conn);
+                            string query = "Insert into Contents(DateLine,LatinLine,CyrillicLine,IntLine,DoubleLine) Values('" + Convert.ToDateTime(records[0]) + "','" + records[1] + "','" + records[2] + "','" + Convert.ToInt32(records[3]) + "','" + records[4] + "')";
+                            con.Open();
+                            SqlCommand cmd = new SqlCommand(query, con);
+                            cmd.ExecuteNonQuery();
+                            con.Close();
+                            
                             progress.UpdateMessage(i, lineCount);
                         }
                     }
                 }
                 progress.CompleteMessage();
+            }
+        }
+
+        public void DbAddCreated(int amount)
+        {
+            for (var i = 1; i <= amount; i++)
+            {
+                DbAdd("file" + i.ToString() + ".txt");
             }
         }
     }
