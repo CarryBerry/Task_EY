@@ -32,7 +32,7 @@ namespace Task_EY
 
                 int answer = 0;
 
-                while (answer < 1 || answer > 3)
+                while (answer < 1 || answer > 2)
                 {
                     answer = Convert.ToInt32(Console.ReadLine());
                 }
