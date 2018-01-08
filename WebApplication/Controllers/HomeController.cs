@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using WebApplication.Models.Handlers;
 using WebApplication.Models.Test;
 
 namespace WebApplication.Controllers
@@ -81,37 +81,6 @@ namespace WebApplication.Controllers
             // redirect back to the index action to show the form once again
             return RedirectToAction("Index");
         }
-        
-        public class ExcelResult : ActionResult
-        {
-                /// <summary>
-                /// Creates an instance of the class that gives the Excel file
-                /// </summary>
-                /// <param name="fileName">filename for export</param>
-                /// <param name="report">dataset for export</param>
-            public ExcelResult(string fileName, string report)
-            {
-                Filename = fileName;
-                Report = report;
-            }
-
-            public string Report { get; private set; }
-            public string Filename { get; private set; }
-
-            public override void ExecuteResult(ControllerContext context)
-            {
-                System.Web.HttpContext.Current.Response.Clear();
-                System.Web.HttpContext.Current.Response.ContentType = "application/vnd.ms-excel";
-                System.Web.HttpContext.Current.Response.BufferOutput = true;
-                System.Web.HttpContext.Current.Response.AddHeader("content-disposition",
-                string.Format("attachment; filename={0}", Filename));
-                System.Web.HttpContext.Current.Response.ContentEncoding = Encoding.UTF8;
-                System.Web.HttpContext.Current.Response.Charset = "utf-8";
-                System.Web.HttpContext.Current.Response.Write(Report);
-                System.Web.HttpContext.Current.Response.Flush();
-                System.Web.HttpContext.Current.Response.End();
-            }
-        }
 
         public ExcelResult Export(int id)
         {
@@ -135,21 +104,21 @@ namespace WebApplication.Controllers
             wb.ExcelWorkbook.WindowTopY = 0;
             wb.ExcelWorkbook.WindowWidth = 600;
             
-            // Third sheet 
-            Worksheet ws3 = new Worksheet("Sheet");
+            // First sheet 
+            Worksheet ws1 = new Worksheet("Sheet");
 
             // Adding Headers
-            ws3.AddCell(0, 0, "");
-            ws3.AddCell(0, 1, "Начальное сальдо", mergeAcross: 1);
-            ws3.AddCell(0, 3, "Текущие показатели", mergeAcross: 1);
-            ws3.AddCell(0, 5, "Конечное сальдо", 1);
-            ws3.AddCell(1, 0, "Б/сч");
-            ws3.AddCell(1, 1, "Актив");
-            ws3.AddCell(1, 2, "Пассив");
-            ws3.AddCell(1, 3, "Актив");
-            ws3.AddCell(1, 4, "Пассив");
-            ws3.AddCell(1, 5, "Актив");
-            ws3.AddCell(1, 6, "Пассив");
+            ws1.AddCell(0, 0, "");
+            ws1.AddCell(0, 1, "Начальное сальдо", mergeAcross: 1);
+            ws1.AddCell(0, 3, "Текущие показатели", mergeAcross: 1);
+            ws1.AddCell(0, 5, "Конечное сальдо", 1);
+            ws1.AddCell(1, 0, "Б/сч");
+            ws1.AddCell(1, 1, "Актив");
+            ws1.AddCell(1, 2, "Пассив");
+            ws1.AddCell(1, 3, "Актив");
+            ws1.AddCell(1, 4, "Пассив");
+            ws1.AddCell(1, 5, "Актив");
+            ws1.AddCell(1, 6, "Пассив");
 
             // get data
             AccountingContext context = new AccountingContext();
@@ -159,34 +128,32 @@ namespace WebApplication.Controllers
             // appending rows with data
             for (int i = 1; i <=people.Count; i++)
             {
-                ws3.AddCell(i + 1, 0, people[p].FieldAccountUnit);
-                ws3.AddCell(i + 1, 1, people[p].IncomingBalanceFieldAsset);
-                ws3.AddCell(i + 1, 2, people[p].IncomingBalanceFieldLiability);
-                ws3.AddCell(i + 1, 3, people[p].CurrentAssetsFieldAsset);
-                ws3.AddCell(i + 1, 4, people[p].CurrentAssetsFieldLiability);
-                ws3.AddCell(i + 1, 5, people[p].OutgoingBalanceFieldAsset);
-                ws3.AddCell(i + 1, 6, people[p].OutgoingBalanceFieldLiability);
+                ws1.AddCell(i + 1, 0, people[p].FieldAccountUnit);
+                ws1.AddCell(i + 1, 1, people[p].IncomingBalanceFieldAsset);
+                ws1.AddCell(i + 1, 2, people[p].IncomingBalanceFieldLiability);
+                ws1.AddCell(i + 1, 3, people[p].CurrentAssetsFieldAsset);
+                ws1.AddCell(i + 1, 4, people[p].CurrentAssetsFieldLiability);
+                ws1.AddCell(i + 1, 5, people[p].OutgoingBalanceFieldAsset);
+                ws1.AddCell(i + 1, 6, people[p].OutgoingBalanceFieldLiability);
                 p++;
             }
 
-            wb.AddWorksheet(ws3);
+            wb.AddWorksheet(ws1);
 
             // generate xml 
             string workstring = wb.ExportToXML();
 
             // Send to user file
-            return new ExcelResult("OOOOOSV.xls", workstring);
+            return new ExcelResult("TurnoverBalanceSheet.xls", workstring);
         }
     
 
         public ActionResult Details(int id)
         {
-            //AccountingContext _context = new AccountingContext();
-            //var model = _context.Fields;
             AccountingContext context = new AccountingContext();
+
             var model = context.Fields.Where(x => x.UploadedFileInfoId == id);
-                       //select item;
-            //var details = aasd.ToList();
+
             return View(model);
         }
 
@@ -196,35 +163,5 @@ namespace WebApplication.Controllers
 
             return View();
         }
-
-        //[HttpPost]
-        //public ActionResult Index(HttpPostedFileBase file)
-        //{
-        //    // check file extension
-        //    string extension = Path.GetExtension(Request.Files[0].FileName).ToLower();
-
-        //    if (extension != ".xls" && extension != ".xlsx")
-        //    {
-        //        ModelState.AddModelError("uploadError", "Supported file extensions: .xls, .xlsx");
-        //        return View();
-        //    }
-
-        //    //@Html.ValidationMessage("uploadError")
-
-
-        //    // Verify that the user selected a file
-        //    if (file != null && file.ContentLength > 0)
-        //    {
-        //        // extract only the filename
-        //        var fileName = Path.GetFileName(file.FileName);
-        //        // store the file inside ~/App_Data/uploads folder
-        //        var path = Path.Combine(Server.MapPath("~/App_Data/uploads"), fileName);
-        //        file.SaveAs(path);
-        //    }
-        //    // redirect back to the index action to show the form once again
-        //    return RedirectToAction("Index");
-        //}
-
-
     }
 }

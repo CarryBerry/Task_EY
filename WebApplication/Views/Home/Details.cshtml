@@ -1,0 +1,75 @@
+﻿@using WebApplication.Models.Test;
+@model IEnumerable<AccountField>
+
+@{
+    ViewBag.Title = "Account Fields";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="page-header">
+        <h1>Fields <small>Account fields</small></h1>
+    </div>
+
+    <ol class="breadcrumb">
+        <li>@Html.ActionLink("Back to list", "Index", "Home")</li>
+        <li class="active">Fields</li>
+    </ol>
+    <table class="table table table-striped table-hover">
+        <thead>
+            <tr>
+                <th row></th>
+                <th colspan="2" scope="colgroup" align="center">Входящее сальдо</th>
+                <th colspan="2" scope="colgroup" align="center">Текущие активы</th>
+                <th colspan="2" scope="colgroup" align="center">Исходящее сальдо</th>
+            </tr>
+            <tr>
+                <th>Б\сч</th>
+                <th>Актив</th>
+                <th>Пассив</th>
+                <th>Актив</th>
+                <th>Пассив</th>
+                <th>Актив</th>
+                <th>Пассив</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FieldAccountUnit)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IncomingBalanceFieldAsset)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IncomingBalanceFieldLiability)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CurrentAssetsFieldAsset)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CurrentAssetsFieldLiability)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OutgoingBalanceFieldAsset)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OutgoingBalanceFieldLiability)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@section scripts{
+    <script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.0/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/be7019ee387/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+    $('.table').DataTable();
+    });
+    </script>
+}
+    

@@ -12,18 +12,6 @@ namespace Task_EY
 
             while (actionStopper)
             {
-                Console.WriteLine("Would you like to exit?");
-                var decision = Console.ReadKey().Key;
-
-                if (decision == ConsoleKey.Y)
-                {
-                    actionStopper = false;
-                }
-                else if (decision == ConsoleKey.N)
-                {
-                    continue;
-                }
-
                 Console.WriteLine("Please, enter amount of files to generate. Default amount: 100.000");
 
                 int amount = 0;
@@ -40,7 +28,6 @@ namespace Task_EY
 
                 Console.WriteLine("1 - merge files,");
                 Console.WriteLine("2 - transfer created files to database,");
-                Console.WriteLine("3 - exit");
                 Console.WriteLine("Please, enter number to proceed:");
 
                 int answer = 0;
@@ -109,10 +96,6 @@ namespace Task_EY
 
                     recorder.OnStop();
                 }
-                else if (answer == 3)
-                {
-                    actionStopper = false;
-                }
 
                 Console.WriteLine("Would you like to know the sum of all the first numbers in all rows?");
                 Console.WriteLine("Or the median of all the second numbers in all rows?");
@@ -127,6 +110,21 @@ namespace Task_EY
                     Console.WriteLine("Median of all the second numbers is {0}", DBNumberManupulator.GetSecondColumnMedian());
                 }
                 else if (k == ConsoleKey.N)
+                {
+                    continue;
+                }
+
+                Console.WriteLine();
+                Console.WriteLine("Would you like to exit?");
+                Console.WriteLine("Y/N");
+
+                var decision = Console.ReadKey().Key;
+
+                if (decision == ConsoleKey.Y)
+                {
+                    actionStopper = false;
+                }
+                else if (decision == ConsoleKey.N)
                 {
                     continue;
                 }

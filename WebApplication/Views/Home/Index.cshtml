@@ -1,0 +1,52 @@
+﻿@using WebApplication.Models.Test;
+@model IEnumerable<UploadedFileInfo>
+
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.ValidationMessage("uploadError")
+    @Html.ValidationMessage("blankFileError")
+
+    <input type="file" name="file" />
+    <input type="submit" value="OK" />
+}
+<div class="container">
+    <div class="page-header">
+        <h1>Account fields</h1>
+    </div>
+
+    <ol class="breadcrumb">
+        <li class="active">Main page</li>
+    </ol>
+    <table class="table table table-striped table-hover">
+        <thead>
+            <tr>
+                <th align="center">File name</th>
+                <th align="center">File path</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.FileName</td>
+                    <td>@item.FilePath</td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", new { id = item.UploadedFileInfoId }) |
+                        @Html.ActionLink("Save as", "Export", new { id = item.UploadedFileInfoId })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section scripts{
+    <script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.0/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/be7019ee387/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.table').DataTable();
+        });
+    </script>
+}
